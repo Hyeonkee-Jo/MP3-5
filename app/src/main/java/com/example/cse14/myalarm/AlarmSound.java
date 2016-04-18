@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class AlarmSound extends Activity {
     private MediaPlayer player;
     final Context context=this;
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,8 @@ public class AlarmSound extends Activity {
         Button stop = (Button) findViewById(R.id.alarm);
         stop.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
-                player.stop();
+                //player.stop();
+                vibrator.cancel();
                 Intent i=new Intent(context,Bye.class);
                 startActivity(i);
                 return false;
@@ -49,7 +52,13 @@ public class AlarmSound extends Activity {
             if (audio.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
                 player.setAudioStreamType(AudioManager.STREAM_ALARM);
                 player.prepare();
-                player.start();
+                //player.start();
+                long[] pattern = {50, 100, 100, 200, 100, 300};
+
+                vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(pattern,1);
+                //vibrator.vibrate(500);
+
             }
         } catch (IOException e) {
             Log.e("Error....","Check code...");
